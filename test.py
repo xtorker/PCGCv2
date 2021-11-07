@@ -52,15 +52,16 @@ def partition_point_cloud(filedir, bin_file, max_num=300000):
     pcd = o3d.io.read_point_cloud(filedir)
     # o3d.visualization.draw_geometries([pcd])
     points = np.asarray(pcd.points)
-    colors = np.asarray(pcd.colors)
+    # colors = np.asarray(pcd.colors)
 
-    pc = np.hstack((points, colors))
+    pc = points
+    # pc = np.hstack((points, colors))
     parts = kdtree_partition(pc, max_num)
 
     for i, pc_part in enumerate(parts):
         pcd_part = o3d.geometry.PointCloud()
         pcd_part.points = o3d.utility.Vector3dVector(pc_part[:,0:3])
-        pcd_part.colors = o3d.utility.Vector3dVector(pc_part[:,3:6])
+        # pcd_part.colors = o3d.utility.Vector3dVector(pc_part[:,3:6])
 
         filedir_part = os.path.dirname(bin_file)+'/'+os.path.split(filedir)[-1][:-4]+'_part'+str(i)+'.ply'
         o3d.io.write_point_cloud(filedir_part, pcd_part, write_ascii=True)
